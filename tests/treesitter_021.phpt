@@ -10,8 +10,8 @@ USE_ZEND_ALLOC=0
 	// a PHP template embedding HTML, which embeds JavaScript and CSS
 	$document = "<!DOCTYPE html>\n<html><body>\n<script>var a = 1;</script>\n<style>p { color: red; }</style>\n<?php echo \"hi\"; ?>\n<p>text é</p>\n</body></html>\n";
 
-	function injections(int $grammar, string $queryName, TS\Node $root): array {
-		$cursor = new TS\QueryCursor(new TS\Query($grammar, TS\Grammar::getQuery($grammar, $queryName)));
+	function injections(TS\Grammar $grammar, string $queryName, TS\Node $root): array {
+		$cursor = new TS\QueryCursor(new TS\Query($grammar, $grammar->getQuery($queryName)));
 		$cursor->exec($root);
 
 		$found = [];

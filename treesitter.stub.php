@@ -4,60 +4,39 @@
 
 namespace TreeSitter {
 	/**
-	 * @strict-properties
-	 * @not-serializable
+	 * The grammars that are built into the extension. The value of a case is a stable number.
 	 */
-	final class Grammar {
+	enum Grammar: int {
 		/**
-		 * @cvalue PHP_TREESITTER_GRAMMAR_PHP
+		 * PHP embedded in HTML: the text outside of the PHP tags is markup.
 		 */
-		public const int PHP = UNKNOWN;
+		case PHP = 0x706870;
 
 		/**
-		 * @cvalue PHP_TREESITTER_GRAMMAR_PHP_ONLY
+		 * Pure PHP: the source is code even without an opening tag.
 		 */
-		public const int PHP_ONLY = UNKNOWN;
+		case PHP_ONLY = 0x7068705f6f6e6c79;
 
-		/**
-		 * @cvalue PHP_TREESITTER_GRAMMAR_HTML
-		 */
-		public const int HTML = UNKNOWN;
+		case HTML = 0x68746d6c;
 
-		/**
-		 * @cvalue PHP_TREESITTER_GRAMMAR_CSS
-		 */
-		public const int CSS = UNKNOWN;
+		case CSS = 0x637373;
 
-		/**
-		 * @cvalue PHP_TREESITTER_GRAMMAR_JAVASCRIPT
-		 */
-		public const int JAVASCRIPT = UNKNOWN;
+		case JAVASCRIPT = 0x6a73;
 
-		/**
-		 * @cvalue PHP_TREESITTER_GRAMMAR_TYPESCRIPT
-		 */
-		public const int TYPESCRIPT = UNKNOWN;
+		case TYPESCRIPT = 0x7473;
 
-		/**
-		 * @cvalue PHP_TREESITTER_GRAMMAR_PYTHON
-		 */
-		public const int PYTHON = UNKNOWN;
+		case PYTHON = 0x707974686f6e;
 
-		/**
-		 * @cvalue PHP_TREESITTER_GRAMMAR_JSON
-		 */
-		public const int JSON = UNKNOWN;
-
-		public function __construct() {}
+		case JSON = 0x6a736f6e;
 
 		/**
 		 * The source of a query file that ships with the grammar (highlights, tags, injections,
-		 * locals, ...), or null if the grammar has no such query. See Grammar::getQueryNames().
+		 * locals, ...), or null if the grammar has no such query. See getQueryNames().
 		 */
-		public static function getQuery(int $grammar, string $name): ?string {}
+		public function getQuery(string $name): ?string {}
 
 		/** @return list<string> */
-		public static function getQueryNames(int $grammar): array {}
+		public function getQueryNames(): array {}
 	}
 
 	/**
@@ -65,7 +44,7 @@ namespace TreeSitter {
 	 * @not-serializable
 	 */
 	final class Parser {
-		public function __construct(int $grammar) {}
+		public function __construct(Grammar $grammar) {}
 
 		/**
 		 * @param Tree|null $old_tree the previous tree of the document, edited with Tree::edit() to match the new source
@@ -158,7 +137,7 @@ namespace TreeSitter {
 	final class Language {
 		public function __construct() {}
 
-		public static function fromGrammar(int $grammar): Language {}
+		public static function fromGrammar(Grammar $grammar): Language {}
 
 		public function getAbiVersion(): int {}
 
@@ -384,7 +363,7 @@ namespace TreeSitter {
 		/**
 		 * @throws QueryException when the query source is invalid
 		 */
-		public function __construct(int $grammar, string $source) {}
+		public function __construct(Grammar $grammar, string $source) {}
 
 		/** @return list<string> */
 		public function getCaptureNames(): array {}

@@ -38,7 +38,7 @@ echo $rootNode; // (document (array (number) (null)))
 
 #### `::__construct(TreeSitter\Grammar $grammar): TreeSitter\Parser`
 
-Creates a new Parser object with the given `TreeSitter\Grammar` grammar. See built-in parser grammars in the Parsers section below.
+Creates a new Parser object with the given `TreeSitter\Grammar` case. See built-in parser grammars in the [Parsers and Grammars](#parsers-and-grammars) section below.
 
 #### `::parse(string $source_code, ?TreeSitter\Tree $old_tree = null): TreeSitter\Tree`
 
@@ -200,7 +200,7 @@ A range in the source: `int $startByte`, `int $endByte`, `Point $startPoint`, `P
 
 ### `TreeSitter\Language`
 
-Describes a grammar. Get it from `Parser::getLanguage()` or `Language::fromGrammar(int $grammar)`.
+Describes a grammar. Get it from `Parser::getLanguage()` or `Language::fromGrammar(Grammar $grammar)`.
 
 |Method|Description|
 |-|-|
@@ -260,7 +260,7 @@ use TreeSitter as TS;
 
 // 1. which parts are HTML? Ask the query that ships with the PHP grammar
 $php = new TS\Parser(TS\Grammar::PHP);
-$query = new TS\Query(TS\Grammar::PHP, TS\Grammar::getQuery(TS\Grammar::PHP, 'injections-text'));
+$query = new TS\Query(TS\Grammar::PHP, TS\Grammar::PHP->getQuery('injections-text'));
 
 $cursor = new TS\QueryCursor($query);
 $cursor->exec($php->parse($document)->getRootNode());
@@ -319,7 +319,7 @@ foreach ($cursor->getMatches() as $match) {
 
 |Method|Description|
 |-|-|
-|`::__construct(int $grammar, string $source)`|Compiles the query for a grammar. Throws `QueryException` if the source is invalid.|
+|`::__construct(Grammar $grammar, string $source)`|Compiles the query for a grammar. Throws `QueryException` if the source is invalid.|
 |`::getCaptureNames(): array`|The capture names (without `@`), indexed by capture id.|
 |`::getPatternCount(): int`|The number of patterns in the source.|
 |`::disablePattern(int $index): void`, `::disableCapture(string $name): void`|Remove a pattern or a capture from the matching. Cannot be undone.|
@@ -365,22 +365,31 @@ Extends `TreeSitter\Exception`. The message names the position (`Invalid query: 
 
 ### Queries that ship with the grammars
 
-`TreeSitter\Grammar::getQuery(int $grammar, string $name): ?string` returns the source of a query file of the grammar (the `queries/*.scm` files: `highlights`, `tags`, `injections`, `locals`, ...), `null` if the grammar has none by that name. `TreeSitter\Grammar::getQueryNames(int $grammar): array` lists the available names. The files are embedded in the extension, so it does not matter where it is installed.
+`Grammar::getQuery(string $name): ?string` returns the source of a query file of the grammar (the `queries/*.scm` files: `highlights`, `tags`, `injections`, `locals`, ...), `null` if the grammar has none by that name. `Grammar::getQueryNames(): array` lists the available names. The files are embedded in the extension, so it does not matter where it is installed.
 
 ```php
-$tags = new TS\Query(TS\Grammar::PHP_ONLY, TS\Grammar::getQuery(TS\Grammar::PHP_ONLY, 'tags'));
+$tags = new TS\Query(TS\Grammar::PHP_ONLY, TS\Grammar::PHP_ONLY->getQuery('tags'));
 // captures: @definition.class, @definition.function, @reference.call, ... each with a @name
 ```
 
-Note that the query files of a grammar can rely on those of another one: the TypeScript queries are meant to be used together with the JavaScript ones (`getQuery(JAVASCRIPT, 'highlights') . getQuery(TYPESCRIPT, 'highlights')` compiled for TypeScript). Queries that use editor specific predicates (e.g. `#lua-match?`) still compile, but those predicates do not filter, see `Query`.
+Note that the query files of a grammar can rely on those of another one: the TypeScript queries are meant to be used together with the JavaScript ones (`Grammar::JAVASCRIPT->getQuery('highlights') . Grammar::TYPESCRIPT->getQuery('highlights')` compiled for TypeScript). Queries that use editor specific predicates (e.g. `#lua-match?`) still compile, but those predicates do not filter, see `Query`.
 
 The embedded copy is `lib/parsers/queries.gen.h`. After updating the grammar submodules regenerate it with `php scripts/embed-queries.php`.
 
 ## Parsers and Grammars
 
+`TreeSitter\Grammar` is an enum, so a parser, a query or a language can only be created for a grammar that exists. Every case has a stable number as its value (`Grammar::PHP->value`), which is what `Grammar::from(int)` and `Grammar::tryFrom(int)` take, e.g. when a grammar is chosen by a configuration value. `Grammar::cases()` lists them.
+
+```php
+$grammar = TS\Grammar::tryFrom($config['grammar']) ?? TS\Grammar::PHP_ONLY;
+$parser = new TS\Parser($grammar);
+```
+
+Upgrading from a version where `Grammar` had integer constants: `Grammar::PHP` and the other names are still there and are still what you pass to `Parser`, `Query` and `Language::fromGrammar()`, but they are enum cases now, an integer is rejected with a `TypeError`. Use `Grammar::from($int)` for a stored number, and `$grammar->getQuery($name)` instead of `Grammar::getQuery($grammar, $name)`.
+
 This extension includes the following parsers:
 
-|Parser|Constant|
+|Parser|Case|
 |-|-|
 |[PHP](https://github.com/tree-sitter/tree-sitter-php)|`TreeSitter\Grammar::PHP` (PHP embedded in HTML: text outside `<?php ... ?>` is markup)|
 |[PHP only](https://github.com/tree-sitter/tree-sitter-php)|`TreeSitter\Grammar::PHP_ONLY` (pure PHP: the source is code even without an opening `<?php` tag)|

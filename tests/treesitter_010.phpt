@@ -67,7 +67,7 @@ function_definition
 bool(true)
 TreeSitter\Language
 TreeSitter\Language class is non-instantiable
-Unknown grammar
+TreeSitter\Language::fromGrammar(): Argument #1 ($grammar) must be of type TreeSitter\Grammar, int given
 0=>0 6=>6 8=>7 12=>9 13=>10 14=>11 21=>17 
 0=>0 6=>6 7=>8 8=>12 9=>12 10=>13 11=>14 
 0

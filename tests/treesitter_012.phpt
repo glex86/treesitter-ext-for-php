@@ -103,5 +103,5 @@ Invalid query: the #any-of? predicate needs a capture and at least one string at
 bool(true)
 Invalid query: the #set! predicate needs a key and an optional value at line 1, column 1 | 0 predicate
 bool(true)
-Unknown grammar
+TreeSitter\Query::__construct(): Argument #1 ($grammar) must be of type TreeSitter\Grammar, int given
 TreeSitter\Query::disablePattern(): Argument #1 ($pattern_index) must be a valid pattern index

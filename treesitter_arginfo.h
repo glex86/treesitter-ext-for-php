@@ -1,20 +1,15 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: 055a52fd087d672a8e169818b60cd20d09a75eca */
+ * Stub hash: 713dc1f1ba6abbb7f99319baeb9b5867f49165d1 */
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_class_TreeSitter_Grammar___construct, 0, 0, 0)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_TreeSitter_Grammar_getQuery, 0, 2, IS_STRING, 1)
-	ZEND_ARG_TYPE_INFO(0, grammar, IS_LONG, 0)
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_TreeSitter_Grammar_getQuery, 0, 1, IS_STRING, 1)
 	ZEND_ARG_TYPE_INFO(0, name, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_TreeSitter_Grammar_getQueryNames, 0, 1, IS_ARRAY, 0)
-	ZEND_ARG_TYPE_INFO(0, grammar, IS_LONG, 0)
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_TreeSitter_Grammar_getQueryNames, 0, 0, IS_ARRAY, 0)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_class_TreeSitter_Parser___construct, 0, 0, 1)
-	ZEND_ARG_TYPE_INFO(0, grammar, IS_LONG, 0)
+	ZEND_ARG_OBJ_INFO(0, grammar, TreeSitter\\Grammar, 0)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_TreeSitter_Parser_parse, 0, 1, TreeSitter\\Tree, 0)
@@ -28,8 +23,7 @@ ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_TreeSitter_Parser_setInclu
 	ZEND_ARG_TYPE_INFO(0, ranges, IS_ARRAY, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_TreeSitter_Parser_getIncludedRanges, 0, 0, IS_ARRAY, 0)
-ZEND_END_ARG_INFO()
+#define arginfo_class_TreeSitter_Parser_getIncludedRanges arginfo_class_TreeSitter_Grammar_getQueryNames
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_TreeSitter_Parser_reset, 0, 0, IS_VOID, 0)
 ZEND_END_ARG_INFO()
@@ -62,10 +56,11 @@ ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_TreeSitter_InputEdit_fromCo
 	ZEND_ARG_TYPE_INFO(0, new_text, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
-#define arginfo_class_TreeSitter_Language___construct arginfo_class_TreeSitter_Grammar___construct
+ZEND_BEGIN_ARG_INFO_EX(arginfo_class_TreeSitter_Language___construct, 0, 0, 0)
+ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_TreeSitter_Language_fromGrammar, 0, 1, TreeSitter\\Language, 0)
-	ZEND_ARG_TYPE_INFO(0, grammar, IS_LONG, 0)
+	ZEND_ARG_OBJ_INFO(0, grammar, TreeSitter\\Grammar, 0)
 ZEND_END_ARG_INFO()
 
 #define arginfo_class_TreeSitter_Language_getAbiVersion arginfo_class_TreeSitter_Parser_getTimeoutMicros
@@ -89,7 +84,7 @@ ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_TreeSitter_Language_getFie
 	ZEND_ARG_TYPE_INFO(0, name, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
-#define arginfo_class_TreeSitter_Tree___construct arginfo_class_TreeSitter_Grammar___construct
+#define arginfo_class_TreeSitter_Tree___construct arginfo_class_TreeSitter_Language___construct
 
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_TreeSitter_Tree_getRootNode, 0, 0, TreeSitter\\\116ode, 0)
 ZEND_END_ARG_INFO()
@@ -107,7 +102,7 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_TreeSitter_Tree_copy, 0, 0, TreeSitter\\Tree, 0)
 ZEND_END_ARG_INFO()
 
-#define arginfo_class_TreeSitter_Tree_getIncludedRanges arginfo_class_TreeSitter_Parser_getIncludedRanges
+#define arginfo_class_TreeSitter_Tree_getIncludedRanges arginfo_class_TreeSitter_Grammar_getQueryNames
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_TreeSitter_Tree_getChangedRanges, 0, 1, IS_ARRAY, 0)
 	ZEND_ARG_OBJ_INFO(0, old, TreeSitter\\Tree, 0)
@@ -123,7 +118,7 @@ ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_TreeSitter_Tree_utf16ToByt
 	ZEND_ARG_TYPE_INFO(0, utf16_column, IS_LONG, 0)
 ZEND_END_ARG_INFO()
 
-#define arginfo_class_TreeSitter_Node___construct arginfo_class_TreeSitter_Grammar___construct
+#define arginfo_class_TreeSitter_Node___construct arginfo_class_TreeSitter_Language___construct
 
 #define arginfo_class_TreeSitter_Node_getType arginfo_class_TreeSitter_Tree_getSource
 
@@ -159,9 +154,9 @@ ZEND_END_ARG_INFO()
 
 #define arginfo_class_TreeSitter_Node_getNamedChild arginfo_class_TreeSitter_Node_getChild
 
-#define arginfo_class_TreeSitter_Node_getChildren arginfo_class_TreeSitter_Parser_getIncludedRanges
+#define arginfo_class_TreeSitter_Node_getChildren arginfo_class_TreeSitter_Grammar_getQueryNames
 
-#define arginfo_class_TreeSitter_Node_getNamedChildren arginfo_class_TreeSitter_Parser_getIncludedRanges
+#define arginfo_class_TreeSitter_Node_getNamedChildren arginfo_class_TreeSitter_Grammar_getQueryNames
 
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_TreeSitter_Node_getParent, 0, 0, TreeSitter\\\116ode, 1)
 ZEND_END_ARG_INFO()
@@ -231,7 +226,7 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_TreeSitter_Node_getRange, 0, 0, TreeSitter\\Range, 0)
 ZEND_END_ARG_INFO()
 
-#define arginfo_class_TreeSitter_TreeCursor___construct arginfo_class_TreeSitter_Grammar___construct
+#define arginfo_class_TreeSitter_TreeCursor___construct arginfo_class_TreeSitter_Language___construct
 
 #define arginfo_class_TreeSitter_TreeCursor_gotoFirstChild arginfo_class_TreeSitter_Node_hasChildren
 
@@ -271,11 +266,11 @@ ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_TreeSitter_Range_contains,
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_class_TreeSitter_Query___construct, 0, 0, 2)
-	ZEND_ARG_TYPE_INFO(0, grammar, IS_LONG, 0)
+	ZEND_ARG_OBJ_INFO(0, grammar, TreeSitter\\Grammar, 0)
 	ZEND_ARG_TYPE_INFO(0, source, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
-#define arginfo_class_TreeSitter_Query_getCaptureNames arginfo_class_TreeSitter_Parser_getIncludedRanges
+#define arginfo_class_TreeSitter_Query_getCaptureNames arginfo_class_TreeSitter_Grammar_getQueryNames
 
 #define arginfo_class_TreeSitter_Query_getPatternCount arginfo_class_TreeSitter_Parser_getTimeoutMicros
 
@@ -315,19 +310,18 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_TreeSitter_QueryCursor_nextCapture, 0, 0, TreeSitter\\QueryCapture, 1)
 ZEND_END_ARG_INFO()
 
-#define arginfo_class_TreeSitter_QueryCursor_getMatches arginfo_class_TreeSitter_Parser_getIncludedRanges
+#define arginfo_class_TreeSitter_QueryCursor_getMatches arginfo_class_TreeSitter_Grammar_getQueryNames
 
-#define arginfo_class_TreeSitter_QueryCursor_getCaptures arginfo_class_TreeSitter_Parser_getIncludedRanges
+#define arginfo_class_TreeSitter_QueryCursor_getCaptures arginfo_class_TreeSitter_Grammar_getQueryNames
 
-#define arginfo_class_TreeSitter_QueryMatch___construct arginfo_class_TreeSitter_Grammar___construct
+#define arginfo_class_TreeSitter_QueryMatch___construct arginfo_class_TreeSitter_Language___construct
 
 #define arginfo_class_TreeSitter_QueryMatch_getNode arginfo_class_TreeSitter_Node_getChildByFieldName
 
 #define arginfo_class_TreeSitter_QueryMatch_getNodes arginfo_class_TreeSitter_Node_getChildrenByFieldName
 
-#define arginfo_class_TreeSitter_QueryCapture___construct arginfo_class_TreeSitter_Grammar___construct
+#define arginfo_class_TreeSitter_QueryCapture___construct arginfo_class_TreeSitter_Language___construct
 
-ZEND_METHOD(TreeSitter_Grammar, __construct);
 ZEND_METHOD(TreeSitter_Grammar, getQuery);
 ZEND_METHOD(TreeSitter_Grammar, getQueryNames);
 ZEND_METHOD(TreeSitter_Parser, __construct);
@@ -435,9 +429,8 @@ ZEND_METHOD(TreeSitter_QueryMatch, getNodes);
 ZEND_METHOD(TreeSitter_QueryCapture, __construct);
 
 static const zend_function_entry class_TreeSitter_Grammar_methods[] = {
-	ZEND_ME(TreeSitter_Grammar, __construct, arginfo_class_TreeSitter_Grammar___construct, ZEND_ACC_PUBLIC)
-	ZEND_ME(TreeSitter_Grammar, getQuery, arginfo_class_TreeSitter_Grammar_getQuery, ZEND_ACC_PUBLIC|ZEND_ACC_STATIC)
-	ZEND_ME(TreeSitter_Grammar, getQueryNames, arginfo_class_TreeSitter_Grammar_getQueryNames, ZEND_ACC_PUBLIC|ZEND_ACC_STATIC)
+	ZEND_ME(TreeSitter_Grammar, getQuery, arginfo_class_TreeSitter_Grammar_getQuery, ZEND_ACC_PUBLIC)
+	ZEND_ME(TreeSitter_Grammar, getQueryNames, arginfo_class_TreeSitter_Grammar_getQueryNames, ZEND_ACC_PUBLIC)
 	ZEND_FE_END
 };
 
@@ -594,58 +587,39 @@ static const zend_function_entry class_TreeSitter_QueryCapture_methods[] = {
 
 static zend_class_entry *register_class_TreeSitter_Grammar(void)
 {
-	zend_class_entry ce, *class_entry;
+	zend_class_entry *class_entry = zend_register_internal_enum("TreeSitter\\Grammar", IS_LONG, class_TreeSitter_Grammar_methods);
 
-	INIT_NS_CLASS_ENTRY(ce, "TreeSitter", "Grammar", class_TreeSitter_Grammar_methods);
-	class_entry = zend_register_internal_class_with_flags(&ce, NULL, ZEND_ACC_FINAL|ZEND_ACC_NO_DYNAMIC_PROPERTIES|ZEND_ACC_NOT_SERIALIZABLE);
+	zval enum_case_PHP_value;
+	ZVAL_LONG(&enum_case_PHP_value, 0x706870);
+	zend_enum_add_case_cstr(class_entry, "PHP", &enum_case_PHP_value);
 
-	zval const_PHP_value;
-	ZVAL_LONG(&const_PHP_value, PHP_TREESITTER_GRAMMAR_PHP);
-	zend_string *const_PHP_name = zend_string_init_interned("PHP", sizeof("PHP") - 1, 1);
-	zend_declare_typed_class_constant(class_entry, const_PHP_name, &const_PHP_value, ZEND_ACC_PUBLIC, NULL, (zend_type) ZEND_TYPE_INIT_MASK(MAY_BE_LONG));
-	zend_string_release(const_PHP_name);
+	zval enum_case_PHP_ONLY_value;
+	ZVAL_LONG(&enum_case_PHP_ONLY_value, 0x7068705f6f6e6c79);
+	zend_enum_add_case_cstr(class_entry, "PHP_ONLY", &enum_case_PHP_ONLY_value);
 
-	zval const_PHP_ONLY_value;
-	ZVAL_LONG(&const_PHP_ONLY_value, PHP_TREESITTER_GRAMMAR_PHP_ONLY);
-	zend_string *const_PHP_ONLY_name = zend_string_init_interned("PHP_ONLY", sizeof("PHP_ONLY") - 1, 1);
-	zend_declare_typed_class_constant(class_entry, const_PHP_ONLY_name, &const_PHP_ONLY_value, ZEND_ACC_PUBLIC, NULL, (zend_type) ZEND_TYPE_INIT_MASK(MAY_BE_LONG));
-	zend_string_release(const_PHP_ONLY_name);
+	zval enum_case_HTML_value;
+	ZVAL_LONG(&enum_case_HTML_value, 0x68746d6c);
+	zend_enum_add_case_cstr(class_entry, "HTML", &enum_case_HTML_value);
 
-	zval const_HTML_value;
-	ZVAL_LONG(&const_HTML_value, PHP_TREESITTER_GRAMMAR_HTML);
-	zend_string *const_HTML_name = zend_string_init_interned("HTML", sizeof("HTML") - 1, 1);
-	zend_declare_typed_class_constant(class_entry, const_HTML_name, &const_HTML_value, ZEND_ACC_PUBLIC, NULL, (zend_type) ZEND_TYPE_INIT_MASK(MAY_BE_LONG));
-	zend_string_release(const_HTML_name);
+	zval enum_case_CSS_value;
+	ZVAL_LONG(&enum_case_CSS_value, 0x637373);
+	zend_enum_add_case_cstr(class_entry, "CSS", &enum_case_CSS_value);
 
-	zval const_CSS_value;
-	ZVAL_LONG(&const_CSS_value, PHP_TREESITTER_GRAMMAR_CSS);
-	zend_string *const_CSS_name = zend_string_init_interned("CSS", sizeof("CSS") - 1, 1);
-	zend_declare_typed_class_constant(class_entry, const_CSS_name, &const_CSS_value, ZEND_ACC_PUBLIC, NULL, (zend_type) ZEND_TYPE_INIT_MASK(MAY_BE_LONG));
-	zend_string_release(const_CSS_name);
+	zval enum_case_JAVASCRIPT_value;
+	ZVAL_LONG(&enum_case_JAVASCRIPT_value, 0x6a73);
+	zend_enum_add_case_cstr(class_entry, "JAVASCRIPT", &enum_case_JAVASCRIPT_value);
 
-	zval const_JAVASCRIPT_value;
-	ZVAL_LONG(&const_JAVASCRIPT_value, PHP_TREESITTER_GRAMMAR_JAVASCRIPT);
-	zend_string *const_JAVASCRIPT_name = zend_string_init_interned("JAVASCRIPT", sizeof("JAVASCRIPT") - 1, 1);
-	zend_declare_typed_class_constant(class_entry, const_JAVASCRIPT_name, &const_JAVASCRIPT_value, ZEND_ACC_PUBLIC, NULL, (zend_type) ZEND_TYPE_INIT_MASK(MAY_BE_LONG));
-	zend_string_release(const_JAVASCRIPT_name);
+	zval enum_case_TYPESCRIPT_value;
+	ZVAL_LONG(&enum_case_TYPESCRIPT_value, 0x7473);
+	zend_enum_add_case_cstr(class_entry, "TYPESCRIPT", &enum_case_TYPESCRIPT_value);
 
-	zval const_TYPESCRIPT_value;
-	ZVAL_LONG(&const_TYPESCRIPT_value, PHP_TREESITTER_GRAMMAR_TYPESCRIPT);
-	zend_string *const_TYPESCRIPT_name = zend_string_init_interned("TYPESCRIPT", sizeof("TYPESCRIPT") - 1, 1);
-	zend_declare_typed_class_constant(class_entry, const_TYPESCRIPT_name, &const_TYPESCRIPT_value, ZEND_ACC_PUBLIC, NULL, (zend_type) ZEND_TYPE_INIT_MASK(MAY_BE_LONG));
-	zend_string_release(const_TYPESCRIPT_name);
+	zval enum_case_PYTHON_value;
+	ZVAL_LONG(&enum_case_PYTHON_value, 0x707974686f6e);
+	zend_enum_add_case_cstr(class_entry, "PYTHON", &enum_case_PYTHON_value);
 
-	zval const_PYTHON_value;
-	ZVAL_LONG(&const_PYTHON_value, PHP_TREESITTER_GRAMMAR_PYTHON);
-	zend_string *const_PYTHON_name = zend_string_init_interned("PYTHON", sizeof("PYTHON") - 1, 1);
-	zend_declare_typed_class_constant(class_entry, const_PYTHON_name, &const_PYTHON_value, ZEND_ACC_PUBLIC, NULL, (zend_type) ZEND_TYPE_INIT_MASK(MAY_BE_LONG));
-	zend_string_release(const_PYTHON_name);
-
-	zval const_JSON_value;
-	ZVAL_LONG(&const_JSON_value, PHP_TREESITTER_GRAMMAR_JSON);
-	zend_string *const_JSON_name = zend_string_init_interned("JSON", sizeof("JSON") - 1, 1);
-	zend_declare_typed_class_constant(class_entry, const_JSON_name, &const_JSON_value, ZEND_ACC_PUBLIC, NULL, (zend_type) ZEND_TYPE_INIT_MASK(MAY_BE_LONG));
-	zend_string_release(const_JSON_name);
+	zval enum_case_JSON_value;
+	ZVAL_LONG(&enum_case_JSON_value, 0x6a736f6e);
+	zend_enum_add_case_cstr(class_entry, "JSON", &enum_case_JSON_value);
 
 	return class_entry;
 }

@@ -17,4 +17,4 @@ Tree-sitter: Simple JSON __toString
 ?>
 --EXPECT--
 (document (array (number) (null)))
-Unknown grammar
+TreeSitter\Parser::__construct(): Argument #1 ($grammar) must be of type TreeSitter\Grammar, int given

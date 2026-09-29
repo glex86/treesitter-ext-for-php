@@ -1,6 +1,7 @@
 #include "tree_sitter/api.h"
 #include "zend_exceptions.h"
 #include "zend_smart_str.h"
+#include "zend_enum.h"
 #include <ctype.h>
 #include "zend_hrtime.h"
 
@@ -49,38 +50,53 @@ static const TSLanguage *php_treesitter_language_for_grammar(zend_long grammar)
 }
 
 static zend_class_entry *php_treesitter_grammar_ce = NULL;
-static zend_object_handlers php_treesitter_grammar_handlers;
 
-static zend_object *php_treesitter_grammar_object_create(zend_class_entry *ce)
+/**
+ * The number behind a TreeSitter\Grammar case.
+ */
+static zend_long php_treesitter_grammar_value(zend_object *grammar)
 {
-    zend_object *php_treesitter_grammar_object = zend_object_alloc(sizeof(zend_object), ce);
-
-    zend_object_std_init(php_treesitter_grammar_object, ce);
-    object_properties_init(php_treesitter_grammar_object, ce);
-
-    return php_treesitter_grammar_object;
+    return Z_LVAL_P(zend_enum_fetch_case_value(grammar));
 }
 
-ZEND_METHOD(TreeSitter_Grammar, __construct)
+/**
+ * The numbers of the enum cases are written in the stub (the stub generator cannot take them from
+ * C constants), the constants of parsers.h are what the C code switches on. They must be the same.
+ */
+static void php_treesitter_check_grammar_values(void)
 {
-    zend_throw_error(NULL, "%s class is non-instantiable", ZSTR_VAL(Z_OBJCE_P(ZEND_THIS)->name));
-    RETURN_THROWS();
+    static const struct {
+        const char *name;
+        zend_long value;
+    } expected[] = {
+        { "PHP", PHP_TREESITTER_GRAMMAR_PHP },
+        { "PHP_ONLY", PHP_TREESITTER_GRAMMAR_PHP_ONLY },
+        { "HTML", PHP_TREESITTER_GRAMMAR_HTML },
+        { "CSS", PHP_TREESITTER_GRAMMAR_CSS },
+        { "JAVASCRIPT", PHP_TREESITTER_GRAMMAR_JAVASCRIPT },
+        { "TYPESCRIPT", PHP_TREESITTER_GRAMMAR_TYPESCRIPT },
+        { "PYTHON", PHP_TREESITTER_GRAMMAR_PYTHON },
+        { "JSON", PHP_TREESITTER_GRAMMAR_JSON },
+    };
+
+    for (size_t i = 0; i < sizeof(expected) / sizeof(expected[0]); i++) {
+        zend_object *grammar = zend_enum_get_case_cstr(php_treesitter_grammar_ce, expected[i].name);
+
+        if (php_treesitter_grammar_value(grammar) != expected[i].value) {
+            zend_error_noreturn(E_CORE_ERROR, "treesitter: the value of Grammar::%s in the stub differs from lib/parsers/parsers.h", expected[i].name);
+        }
+    }
 }
 
 ZEND_METHOD(TreeSitter_Grammar, getQuery)
 {
-    zend_long grammar;
     zend_string *name;
 
-    ZEND_PARSE_PARAMETERS_START(2, 2)
-        Z_PARAM_LONG(grammar)
+    ZEND_PARSE_PARAMETERS_START(1, 1)
         Z_PARAM_STR(name)
     ZEND_PARSE_PARAMETERS_END();
 
-    if (php_treesitter_language_for_grammar(grammar) == NULL) {
-        zend_throw_error(NULL, "Unknown grammar");
-        RETURN_THROWS();
-    }
+    zend_long grammar = php_treesitter_grammar_value(Z_OBJ_P(ZEND_THIS));
 
     for (size_t i = 0; i < sizeof(php_treesitter_embedded_queries) / sizeof(php_treesitter_embedded_queries[0]); i++) {
         const php_treesitter_embedded_query *query = &php_treesitter_embedded_queries[i];
@@ -95,16 +111,9 @@ ZEND_METHOD(TreeSitter_Grammar, getQuery)
 
 ZEND_METHOD(TreeSitter_Grammar, getQueryNames)
 {
-    zend_long grammar;
+    ZEND_PARSE_PARAMETERS_NONE();
 
-    ZEND_PARSE_PARAMETERS_START(1, 1)
-        Z_PARAM_LONG(grammar)
-    ZEND_PARSE_PARAMETERS_END();
-
-    if (php_treesitter_language_for_grammar(grammar) == NULL) {
-        zend_throw_error(NULL, "Unknown grammar");
-        RETURN_THROWS();
-    }
+    zend_long grammar = php_treesitter_grammar_value(Z_OBJ_P(ZEND_THIS));
 
     array_init(return_value);
 
@@ -115,11 +124,6 @@ ZEND_METHOD(TreeSitter_Grammar, getQueryNames)
             add_next_index_string(return_value, query->name);
         }
     }
-}
-
-static void php_treesitter_grammar_object_free(zend_object *obj)
-{
-    zend_object_std_dtor(obj);
 }
 
 static zend_class_entry *php_treesitter_point_ce = NULL;
@@ -534,13 +538,13 @@ ZEND_METHOD(TreeSitter_Language, __construct)
 
 ZEND_METHOD(TreeSitter_Language, fromGrammar)
 {
-    zend_long grammar_param;
+    zval *grammar_zv;
 
     ZEND_PARSE_PARAMETERS_START(1, 1)
-        Z_PARAM_LONG(grammar_param)
+        Z_PARAM_OBJECT_OF_CLASS(grammar_zv, php_treesitter_grammar_ce)
     ZEND_PARSE_PARAMETERS_END();
 
-    const TSLanguage *language = php_treesitter_language_for_grammar(grammar_param);
+    const TSLanguage *language = php_treesitter_language_for_grammar(php_treesitter_grammar_value(Z_OBJ_P(grammar_zv)));
 
     if (language == NULL) {
         zend_throw_error(NULL, "Unknown grammar");
@@ -1900,16 +1904,15 @@ static zend_object *php_treesitter_parser_object_create(zend_class_entry *ce)
 
 ZEND_METHOD(TreeSitter_Parser, __construct)
 {
-    // TODO: should grammar be an enum class instead?
-    zend_long grammar_param;
+    zval *grammar_zv;
 
     ZEND_PARSE_PARAMETERS_START(1, 1)
-        Z_PARAM_LONG(grammar_param)
+        Z_PARAM_OBJECT_OF_CLASS(grammar_zv, php_treesitter_grammar_ce)
     ZEND_PARSE_PARAMETERS_END();
 
     php_treesitter_parser_object *parser = php_treesitter_parser_object_from_zend_object(Z_OBJ_P(ZEND_THIS));
 
-    const TSLanguage *grammar = php_treesitter_language_for_grammar(grammar_param);
+    const TSLanguage *grammar = php_treesitter_language_for_grammar(php_treesitter_grammar_value(Z_OBJ_P(grammar_zv)));
 
     if (grammar == NULL) {
         zend_throw_error(NULL, "Unknown grammar");
@@ -2667,13 +2670,13 @@ static bool php_treesitter_query_compile_predicates(php_treesitter_query_object 
 
 ZEND_METHOD(TreeSitter_Query, __construct)
 {
-    zend_long grammar_param;
+    zval *grammar_zv;
     zend_string *source;
 
     php_treesitter_query_object *query = php_treesitter_query_object_from_zend_object(Z_OBJ_P(ZEND_THIS));
 
     ZEND_PARSE_PARAMETERS_START(2, 2)
-        Z_PARAM_LONG(grammar_param)
+        Z_PARAM_OBJECT_OF_CLASS(grammar_zv, php_treesitter_grammar_ce)
         Z_PARAM_STR(source)
     ZEND_PARSE_PARAMETERS_END();
 
@@ -2682,7 +2685,7 @@ ZEND_METHOD(TreeSitter_Query, __construct)
         RETURN_THROWS();
     }
 
-    const TSLanguage *language = php_treesitter_language_for_grammar(grammar_param);
+    const TSLanguage *language = php_treesitter_language_for_grammar(php_treesitter_grammar_value(Z_OBJ_P(grammar_zv)));
 
     if (language == NULL) {
         zend_throw_error(NULL, "Unknown grammar");
@@ -3397,13 +3400,6 @@ ZEND_METHOD(TreeSitter_QueryCursor, getCaptures)
 PHP_MINIT_FUNCTION(treesitter)
 {
     php_treesitter_grammar_ce = register_class_TreeSitter_Grammar();
-    php_treesitter_grammar_ce->default_object_handlers = &php_treesitter_grammar_handlers;
-    php_treesitter_grammar_ce->create_object = php_treesitter_grammar_object_create;
-
-    memcpy(&php_treesitter_grammar_handlers, &std_object_handlers, sizeof(zend_object_handlers));
-    php_treesitter_grammar_handlers.free_obj = php_treesitter_grammar_object_free;
-    php_treesitter_grammar_handlers.compare = zend_objects_not_comparable;
-    php_treesitter_grammar_handlers.clone_obj = NULL;
 
     php_treesitter_parser_ce = register_class_TreeSitter_Parser();
     php_treesitter_parser_ce->default_object_handlers = &php_treesitter_parser_handlers;
@@ -3498,6 +3494,22 @@ PHP_MINIT_FUNCTION(treesitter)
     return SUCCESS;
 }
 
+/*
+ * The cases of an internal enum are constants that are evaluated on first use, which is not possible
+ * in MINIT. The first request checks them once.
+ */
+PHP_RINIT_FUNCTION(treesitter)
+{
+    static bool checked = false;
+
+    if (!checked) {
+        checked = true;
+        php_treesitter_check_grammar_values();
+    }
+
+    return SUCCESS;
+}
+
 PHP_MINFO_FUNCTION(treesitter)
 {
     char ts_abi_version[4];
@@ -3516,7 +3528,7 @@ zend_module_entry treesitter_module_entry = {
     NULL,                           /* zend_function_entry */
     PHP_MINIT(treesitter),          /* PHP_MINIT - Module initialization */
     NULL,                           /* PHP_MSHUTDOWN - Module shutdown */
-    NULL,                           /* PHP_RINIT - Request initialization */
+    PHP_RINIT(treesitter),          /* PHP_RINIT - Request initialization */
     NULL,                           /* PHP_RSHUTDOWN - Request shutdown */
     PHP_MINFO(treesitter),          /* PHP_MINFO - Module info */
     PHP_TREESITTER_VERSION,         /* Version */
