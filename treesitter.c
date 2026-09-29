@@ -1,3 +1,7 @@
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include "tree_sitter/api.h"
 #include "zend_exceptions.h"
 #include "zend_smart_str.h"
@@ -3502,6 +3506,10 @@ PHP_RINIT_FUNCTION(treesitter)
 {
     static bool checked = false;
 
+#if defined(ZTS) && defined(COMPILE_DL_TREESITTER)
+    ZEND_TSRMLS_CACHE_UPDATE();
+#endif
+
     if (!checked) {
         checked = true;
         php_treesitter_check_grammar_values();
@@ -3512,8 +3520,8 @@ PHP_RINIT_FUNCTION(treesitter)
 
 PHP_MINFO_FUNCTION(treesitter)
 {
-    char ts_abi_version[4];
-    sprintf(ts_abi_version, "%d", TREE_SITTER_LANGUAGE_VERSION);
+    char ts_abi_version[16];
+    snprintf(ts_abi_version, sizeof(ts_abi_version), "%d", TREE_SITTER_LANGUAGE_VERSION);
 
     php_info_print_table_start();
     php_info_print_table_row(2, "Version", PHP_TREESITTER_VERSION "-unstable");
@@ -3535,4 +3543,9 @@ zend_module_entry treesitter_module_entry = {
     STANDARD_MODULE_PROPERTIES
 };
 
+#ifdef COMPILE_DL_TREESITTER
+# ifdef ZTS
+ZEND_TSRMLS_CACHE_DEFINE()
+# endif
 ZEND_GET_MODULE(treesitter)
+#endif

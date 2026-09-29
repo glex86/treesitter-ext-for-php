@@ -1,0 +1,39 @@
+// vim:ft=javascript
+
+// The sources are the same as in config.m4, keep the two in sync.
+
+ARG_ENABLE("treesitter", "treesitter support", "no");
+
+if (PHP_TREESITTER != "no") {
+	var treesitter_dir = configure_module_dirname;
+
+	// treesitter_lib_msvc.c is tree-sitter itself: lib.c, the one translation unit that includes the others,
+	// with the definition of _Static_assert that Visual Studio needs
+	EXTENSION("treesitter", "treesitter.c treesitter_lib_msvc.c", PHP_TREESITTER_SHARED, "/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1");
+
+	// The grammars. All of them have a parser.c (and most a scanner.c), and in a phpize build the object
+	// directory does not follow the directory of the sources: without the fourth argument every parser.c
+	// would be built to the same parser.obj, the last one wins and the other grammars are missing from the
+	// DLL (unresolved externals when linking). So every grammar gets an object directory of its own.
+	ADD_SOURCES(treesitter_dir + "\\lib\\parsers\\tree-sitter-php\\php\\src", "parser.c scanner.c", "treesitter", "treesitter_php");
+	ADD_SOURCES(treesitter_dir + "\\lib\\parsers\\tree-sitter-php\\php_only\\src", "parser.c scanner.c", "treesitter", "treesitter_php_only");
+	ADD_SOURCES(treesitter_dir + "\\lib\\parsers\\tree-sitter-html\\src", "parser.c scanner.c", "treesitter", "treesitter_html");
+	ADD_SOURCES(treesitter_dir + "\\lib\\parsers\\tree-sitter-css\\src", "parser.c scanner.c", "treesitter", "treesitter_css");
+	ADD_SOURCES(treesitter_dir + "\\lib\\parsers\\tree-sitter-javascript\\src", "parser.c scanner.c", "treesitter", "treesitter_javascript");
+	ADD_SOURCES(treesitter_dir + "\\lib\\parsers\\tree-sitter-typescript\\typescript\\src", "parser.c scanner.c", "treesitter", "treesitter_typescript");
+	ADD_SOURCES(treesitter_dir + "\\lib\\parsers\\tree-sitter-typescript\\tsx\\src", "parser.c scanner.c", "treesitter", "treesitter_tsx");
+	ADD_SOURCES(treesitter_dir + "\\lib\\parsers\\tree-sitter-json\\src", "parser.c", "treesitter", "treesitter_json");
+	ADD_SOURCES(treesitter_dir + "\\lib\\parsers\\tree-sitter-python\\src", "parser.c scanner.c", "treesitter", "treesitter_python");
+
+	// The include directories are the ones of config.m4. Several grammars get tree_sitter/parser.h and
+	// tree_sitter/array.h from the directory of the PHP grammar. /std:c11 is not an option, the headers of PHP
+	// do not compile with it. /bigobj: the generated parsers have very large tables, /utf-8: the sources are
+	// UTF-8, not the code page of the machine.
+	ADD_FLAG("CFLAGS_TREESITTER",
+		'/I "' + treesitter_dir + '\\lib\\tree-sitter\\lib\\include" ' +
+		'/I "' + treesitter_dir + '\\lib\\tree-sitter\\lib\\src" ' +
+		'/I "' + treesitter_dir + '\\lib\\parsers\\tree-sitter-php\\php\\src" ' +
+		'/bigobj /utf-8');
+
+	AC_DEFINE("HAVE_TREESITTER", 1, "treesitter support enabled");
+}

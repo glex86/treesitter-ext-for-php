@@ -1,0 +1,17 @@
+{
+    "name": "soulseekah/ext-treesitter",
+    "description": "PHP bindings for Tree-sitter with the grammars and the API that a language server needs",
+    "type": "php-ext",
+    "require": {
+        "php": ">=8.4"
+    },
+    "php-ext": {
+        "extension-name": "treesitter",
+        "configure-options": [
+            {
+                "name": "enable-treesitter",
+                "description": "Enable the treesitter extension"
+            }
+        ]
+    }
+}

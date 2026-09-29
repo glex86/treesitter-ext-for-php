@@ -32,3 +32,21 @@ gen_stub.php
 PHP-Parser-5.0.0
 .codegraph/
 tmp-php.ini
+# Windows build
+*.obj
+*.pdb
+*.exp
+*.ilk
+/*.dll
+/*.lib
+/Release/
+/Release_TS/
+/Debug/
+/Debug_TS/
+/x64/
+/artifacts/
+/.vs/
+/configure.js
+/configure.bat
+/config.w32.h
+/config.nice.bat

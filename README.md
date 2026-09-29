@@ -4,6 +4,8 @@ https://tree-sitter.github.io/tree-sitter/
 
 ## Building
 
+### Linux and macOS
+
 ```bash
 git submodule update --init --recursive
 
@@ -17,6 +19,41 @@ make install
 ```
 
 `extension=treesitter.so` has to be added to your PHP ini file.
+
+### Windows
+
+Needs PHP 8.4 and the Visual Studio that PHP was built with: Visual Studio 2022 for PHP 8.4, with the "Desktop development with C++" workload **and its Windows SDK component** (`Windows 11 SDK` or `Windows 10 SDK`, `mc.exe` comes from it, the C++ tools alone are not enough). The easiest way is [php-windows-builder](https://github.com/php/php-windows-builder), which fetches the PHP SDK, the development files of the PHP version and builds the extension:
+
+```powershell
+Install-Module -Name BuildPhpExtension -Repository PSGallery -Force
+
+# from the directory of the extension: x64 or x86, nts or ts, must match the php.exe you run
+Invoke-PhpBuildExtension -PhpVersion 8.4 -Arch x64 -Ts nts
+```
+
+The result is a zip in the `artifacts` directory with the DLL and its debug symbols. The DLL is named after the build (`php_treesitter-local-8.4-nts-vs17-x86_64.dll`): copy it into the `ext` directory of PHP as `php_treesitter.dll` and add `extension=php_treesitter.dll` to your PHP ini file.
+
+`scripts\build-windows.ps1` does the same, and runs the tests, from a clean copy of the sources. That avoids three problems: a working tree that was built on Linux before holds files (`Makefile`, `config.h`, `build/`) that confuse `phpize`, the SDK cannot start its task script when the environment has `NoDefaultCurrentDirectoryInExePath=1` (the script clears it for its own process only), and the test step of the module lists `C:\Windows\Temp`, which only an administrator may do (the script runs `run-tests.php` itself with the PHP that the module downloaded).
+
+```powershell
+.\scripts\build-windows.ps1                       # PHP 8.4, x64, nts
+.\scripts\build-windows.ps1 -Arch x64 -Ts ts      # a thread safe PHP
+```
+
+The extension is enabled through `composer.json` (`php-ext.configure-options`), which is where php-windows-builder reads the configure option from.
+
+The same works in GitHub Actions with `php/php-windows-builder/extension@v1` (`php-version`, `arch`, `ts` inputs).
+
+To build by hand, in a shell of the [PHP SDK](https://github.com/php/php-sdk-binary-tools) with the sources of PHP (or the development pack) of the same version, architecture and thread safety as your PHP:
+
+```bat
+phpize
+configure --enable-treesitter
+nmake
+nmake test
+```
+
+The build of the bundled grammars takes a few minutes: the generated parsers are big. `config.w32` lists the same sources as `config.m4`.
 
 ## Usage
 
