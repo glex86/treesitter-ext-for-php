@@ -3526,7 +3526,20 @@ PHP_MINFO_FUNCTION(treesitter)
     php_info_print_table_start();
     php_info_print_table_row(2, "Version", PHP_TREESITTER_VERSION "-unstable");
     php_info_print_table_row(2, "Tree-sitter ABI", ts_abi_version);
-    php_info_print_table_row(2, "Parsers", "PHP PHP_ONLY HTML CSS JAVASCRIPT TYPESCRIPT PYTHON JSON");
+    php_info_print_table_row(2, "Authors", "Dávid Tamás with Claude");
+    php_info_print_table_end();
+
+    /* Versions of the bundled grammars, TS_VERSION_* come from config.m4 / config.w32 */
+    php_info_print_table_start();
+    php_info_print_table_header(2, "Supported language", "Parser version");
+    php_info_print_table_row(2, "PHP", TS_VERSION_PHP);
+    php_info_print_table_row(2, "PHP_ONLY", TS_VERSION_PHP);
+    php_info_print_table_row(2, "HTML", TS_VERSION_HTML);
+    php_info_print_table_row(2, "CSS", TS_VERSION_CSS);
+    php_info_print_table_row(2, "JAVASCRIPT", TS_VERSION_JAVASCRIPT);
+    php_info_print_table_row(2, "TYPESCRIPT", TS_VERSION_TYPESCRIPT);
+    php_info_print_table_row(2, "PYTHON", TS_VERSION_PYTHON);
+    php_info_print_table_row(2, "JSON", TS_VERSION_JSON);
     php_info_print_table_end();
 }
 
