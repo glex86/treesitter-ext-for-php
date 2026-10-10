@@ -66,15 +66,29 @@ if (Test-Path $Work) {
 
 New-Item -ItemType Directory -Force $source | Out-Null
 
+# the files git knows plus the new ones, the submodules (mode 160000 in the index) are entered recursively
+function Get-SourceFiles([string] $root, [string] $prefix) {
+    $submodules = @(git -C $root ls-files --stage | Where-Object { $_ -match '^160000 ' } |
+        ForEach-Object { ($_ -split "`t", 2)[1] })
+
+    foreach ($file in (git -C $root ls-files --cached --others --exclude-standard)) {
+        if ($submodules -contains $file) {
+            Get-SourceFiles (Join-Path $root $file) "$prefix$file/"
+        } else {
+            [pscustomobject]@{ From = Join-Path $root $file; Relative = "$prefix$file" }
+        }
+    }
+}
+
 $copied = 0
-foreach ($file in (git -C $repository ls-files --cached --others --exclude-standard)) {
-    $from = Join-Path $repository $file
+foreach ($entry in (Get-SourceFiles $repository '')) {
+    $from = $entry.From
 
     if (-not (Test-Path -LiteralPath $from -PathType Leaf)) {
         continue
     }
 
-    $to = Join-Path $source $file
+    $to = Join-Path $source $entry.Relative
     $directory = Split-Path $to -Parent
 
     if (-not (Test-Path $directory)) {
@@ -89,6 +103,24 @@ Write-Host "Copied $copied files to $source"
 
 # the task script of the PHP SDK is started from the current directory
 $env:NoDefaultCurrentDirectoryInExePath = $null
+
+# vcvars and the SDK append to PATH inside cmd.exe, whose command line is limited to 8191 characters: with a
+# long PATH the build stops with "The input line is too long". Drop the duplicates and the missing directories.
+$env:Path = (($env:Path -split ';' | Where-Object { $_ -and (Test-Path -LiteralPath $_) } |
+    Select-Object -Unique) -join ';')
+# The module rebuilds PATH from the registry (user + machine) in its Add-Path, which brings the long PATH back
+# and also writes the user PATH. Within the module that function is replaced with one that touches only the
+# PATH of this process.
+Import-Module BuildPhpExtension -Force
+& (Get-Module BuildPhpExtension) {
+    # script: scope, a plain "function" would only live in the scope of this script block
+    Set-Item -Path 'Function:\script:Add-Path' -Value {
+        param([Parameter(Mandatory = $true, Position = 0)] [string] $PathItem)
+        if (-not ($env:Path.Split(';') -contains $PathItem)) {
+            $env:Path = $PathItem + ';' + $env:Path
+        }
+    }
+}
 $env:BUILD_DIRECTORY = Join-Path $Work 'work'
 # the module does not run the tests, this script does (see below)
 $env:RUN_TESTS = 'false'
