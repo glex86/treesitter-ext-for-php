@@ -30,3 +30,6 @@
 	path = lib/parsers/tree-sitter-css
 	url = https://github.com/tree-sitter/tree-sitter-css
 	ignore = dirty
+[submodule "lib/parsers/tree-sitter-phpdoc"]
+	path = lib/parsers/tree-sitter-phpdoc
+	url = https://github.com/claytonrcarter/tree-sitter-phpdoc

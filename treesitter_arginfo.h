@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: 713dc1f1ba6abbb7f99319baeb9b5867f49165d1 */
+ * Stub hash: 672b6376d3e0c32d79f8665eb2c91ee22b5f107b */
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_TreeSitter_Grammar_getQuery, 0, 1, IS_STRING, 1)
 	ZEND_ARG_TYPE_INFO(0, name, IS_STRING, 0)
@@ -596,6 +596,10 @@ static zend_class_entry *register_class_TreeSitter_Grammar(void)
 	zval enum_case_PHP_ONLY_value;
 	ZVAL_LONG(&enum_case_PHP_ONLY_value, 0x7068705f6f6e6c79);
 	zend_enum_add_case_cstr(class_entry, "PHP_ONLY", &enum_case_PHP_ONLY_value);
+
+	zval enum_case_PHPDOC_value;
+	ZVAL_LONG(&enum_case_PHPDOC_value, 0x706870646f63);
+	zend_enum_add_case_cstr(class_entry, "PHPDOC", &enum_case_PHPDOC_value);
 
 	zval enum_case_HTML_value;
 	ZVAL_LONG(&enum_case_HTML_value, 0x68746d6c);

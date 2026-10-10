@@ -5,6 +5,7 @@
 
 #define PHP_TREESITTER_GRAMMAR_PHP           0x706870L
 #define PHP_TREESITTER_GRAMMAR_PHP_ONLY      0x7068705f6f6e6c79L
+#define PHP_TREESITTER_GRAMMAR_PHPDOC        0x706870646f63L
 #define PHP_TREESITTER_GRAMMAR_HTML         0x68746d6cL
 #define PHP_TREESITTER_GRAMMAR_CSS           0x637373L
 #define PHP_TREESITTER_GRAMMAR_JAVASCRIPT    0x6a73L
@@ -14,6 +15,7 @@
 
 const TSLanguage *tree_sitter_php(void);
 const TSLanguage *tree_sitter_php_only(void);
+const TSLanguage *tree_sitter_phpdoc(void);
 const TSLanguage *tree_sitter_html(void);
 const TSLanguage *tree_sitter_css(void);
 const TSLanguage *tree_sitter_javascript(void);

@@ -17,6 +17,11 @@ namespace TreeSitter {
 		 */
 		case PHP_ONLY = 0x7068705f6f6e6c79;
 
+		/**
+		 * The content of the PHPDoc comments of a PHP tree, to parse the text of its comment nodes.
+		 */
+		case PHPDOC = 0x706870646f63;
+
 		case HTML = 0x68746d6c;
 
 		case CSS = 0x637373;

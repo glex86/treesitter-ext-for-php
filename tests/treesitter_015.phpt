@@ -39,6 +39,7 @@ Tree-sitter: Grammar::getQuery embedded queries
 --EXPECT--
 PHP: 4 of 4 compiled
 PHP_ONLY: 3 of 3 compiled
+PHPDOC: 0 of 0 compiled
 HTML: 2 of 2 compiled
 CSS: 1 of 1 compiled
 JAVASCRIPT: 6 of 6 compiled

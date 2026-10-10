@@ -430,6 +430,7 @@ This extension includes the following parsers:
 |-|-|
 |[PHP](https://github.com/tree-sitter/tree-sitter-php)|`TreeSitter\Grammar::PHP` (PHP embedded in HTML: text outside `<?php ... ?>` is markup)|
 |[PHP only](https://github.com/tree-sitter/tree-sitter-php)|`TreeSitter\Grammar::PHP_ONLY` (pure PHP: the source is code even without an opening `<?php` tag)|
+|[PHPDoc](https://github.com/claytonrcarter/tree-sitter-phpdoc)|`TreeSitter\Grammar::PHPDOC` (the content of PHPDoc comments)|
 |[HTML](https://github.com/tree-sitter/tree-sitter-html)|`TreeSitter\Grammar::HTML`|
 |[CSS](https://github.com/tree-sitter/tree-sitter-css)|`TreeSitter\Grammar::CSS`|
 |[JavaScript & JSX](https://github.com/tree-sitter/tree-sitter-javascript)|`TreeSitter\Grammar::JAVASCRIPT`|

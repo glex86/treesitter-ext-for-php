@@ -28,6 +28,7 @@ Tree-sitter: Grammar enum
 --EXPECT--
 php
 php_only
+phpdoc
 html
 css
 js

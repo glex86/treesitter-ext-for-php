@@ -36,6 +36,8 @@ static const TSLanguage *php_treesitter_language_for_grammar(zend_long grammar)
             return tree_sitter_php();
         case PHP_TREESITTER_GRAMMAR_PHP_ONLY:
             return tree_sitter_php_only();
+        case PHP_TREESITTER_GRAMMAR_PHPDOC:
+            return tree_sitter_phpdoc();
         case PHP_TREESITTER_GRAMMAR_HTML:
             return tree_sitter_html();
         case PHP_TREESITTER_GRAMMAR_CSS:
@@ -75,6 +77,7 @@ static void php_treesitter_check_grammar_values(void)
     } expected[] = {
         { "PHP", PHP_TREESITTER_GRAMMAR_PHP },
         { "PHP_ONLY", PHP_TREESITTER_GRAMMAR_PHP_ONLY },
+        { "PHPDOC", PHP_TREESITTER_GRAMMAR_PHPDOC },
         { "HTML", PHP_TREESITTER_GRAMMAR_HTML },
         { "CSS", PHP_TREESITTER_GRAMMAR_CSS },
         { "JAVASCRIPT", PHP_TREESITTER_GRAMMAR_JAVASCRIPT },
@@ -3534,6 +3537,7 @@ PHP_MINFO_FUNCTION(treesitter)
     php_info_print_table_header(2, "Supported language", "Parser version");
     php_info_print_table_row(2, "PHP", TS_VERSION_PHP);
     php_info_print_table_row(2, "PHP_ONLY", TS_VERSION_PHP);
+    php_info_print_table_row(2, "PHPDOC", TS_VERSION_PHPDOC);
     php_info_print_table_row(2, "HTML", TS_VERSION_HTML);
     php_info_print_table_row(2, "CSS", TS_VERSION_CSS);
     php_info_print_table_row(2, "JAVASCRIPT", TS_VERSION_JAVASCRIPT);
