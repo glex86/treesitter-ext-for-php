@@ -3,11 +3,10 @@ AC_DEFINE(HAVE_TREESITTER, 1, [ Have treesitter ])
 dnl Versions of the bundled grammars for the module info, from the tree-sitter.json of each of them.
 dnl Keep the names in sync with PHP_MINFO_FUNCTION in treesitter.c.
 ts_grammar_version() {
-  grep -m1 '"version"' "$srcdir/lib/parsers/$1/${2:-tree-sitter.json}" | cut -d'"' -f4
+  grep -m1 '"version"' "$srcdir/lib/parsers/$1/tree-sitter.json" | cut -d'"' -f4
 }
 AC_DEFINE_UNQUOTED(TS_VERSION_PHP, ["`ts_grammar_version tree-sitter-php`"], [Version of the PHP grammar])
-dnl tree-sitter-phpdoc has no tree-sitter.json, its version is in the package.json
-AC_DEFINE_UNQUOTED(TS_VERSION_PHPDOC, ["`ts_grammar_version tree-sitter-phpdoc package.json`"], [Version of the PHPDoc grammar])
+AC_DEFINE_UNQUOTED(TS_VERSION_PHPDOC, ["`ts_grammar_version tree-sitter-phpdoc`"], [Version of the PHPDoc grammar])
 AC_DEFINE_UNQUOTED(TS_VERSION_HTML, ["`ts_grammar_version tree-sitter-html`"], [Version of the HTML grammar])
 AC_DEFINE_UNQUOTED(TS_VERSION_CSS, ["`ts_grammar_version tree-sitter-css`"], [Version of the CSS grammar])
 AC_DEFINE_UNQUOTED(TS_VERSION_JAVASCRIPT, ["`ts_grammar_version tree-sitter-javascript`"], [Version of the JavaScript grammar])

@@ -32,4 +32,6 @@
 	ignore = dirty
 [submodule "lib/parsers/tree-sitter-phpdoc"]
 	path = lib/parsers/tree-sitter-phpdoc
-	url = https://github.com/claytonrcarter/tree-sitter-phpdoc
+	url = https://github.com/glex86/tree-sitter-phpdoc.git
+	branch = ts-0.25
+	ignore = dirty

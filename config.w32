@@ -38,9 +38,8 @@ if (PHP_TREESITTER != "no") {
 
     // Versions of the bundled grammars for the module info, from the tree-sitter.json of each of them.
     // Keep the names in sync with PHP_MINFO_FUNCTION in treesitter.c.
-    // tree-sitter-phpdoc has no tree-sitter.json, its version is in the package.json
-    function treesitter_grammar_version(dir, file) {
-        var json = file_get_contents(treesitter_dir + "\\lib\\parsers\\" + dir + "\\" + (file || "tree-sitter.json"));
+    function treesitter_grammar_version(dir) {
+        var json = file_get_contents(treesitter_dir + "\\lib\\parsers\\" + dir + "\\tree-sitter.json");
         var match = /"version":\s*"([^"]+)"/.exec(json);
         return match ? match[1] : "unknown";
     }
@@ -50,7 +49,7 @@ if (PHP_TREESITTER != "no") {
         "PYTHON": "tree-sitter-python", "JSON": "tree-sitter-json"
     };
     for (var treesitter_name in treesitter_grammars) {
-        AC_DEFINE("TS_VERSION_" + treesitter_name, '"' + treesitter_grammar_version(treesitter_grammars[treesitter_name], treesitter_name == "PHPDOC" ? "package.json" : null) + '"', "Version of the " + treesitter_name + " grammar", false);
+        AC_DEFINE("TS_VERSION_" + treesitter_name, '"' + treesitter_grammar_version(treesitter_grammars[treesitter_name]) + '"', "Version of the " + treesitter_name + " grammar", false);
     }
 
     AC_DEFINE("HAVE_TREESITTER", 1, "treesitter support enabled");
