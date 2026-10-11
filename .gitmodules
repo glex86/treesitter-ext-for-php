@@ -33,5 +33,5 @@
 [submodule "lib/parsers/tree-sitter-phpdoc"]
 	path = lib/parsers/tree-sitter-phpdoc
 	url = https://github.com/glex86/tree-sitter-phpdoc.git
-	branch = ts-0.25
+	branch = fixes
 	ignore = dirty
