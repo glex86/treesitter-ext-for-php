@@ -21,6 +21,7 @@
 *.la
 *.loT
 *.o
+**/*.lo
 tests/*.diff
 tests/*.exp
 tests/*.log
@@ -50,3 +51,44 @@ tmp-php.ini
 /configure.bat
 /config.w32.h
 /config.nice.bat
+/artifacts
+/example
+/playground
+
+# Grammar volatiles
+*.wasm
+*.obj
+*.o
+
+# Archives
+*.tar.gz
+*.tgz
+*.zip
+
+
+# Python artifacts
+.venv/
+dist/
+*.egg-info
+*.whl
+__pycache__/
+*.pyc
+
+# C artifacts
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.pc
+*.exp
+*.lib
+
+# AI artifacts
+/.claude
+/.codegraph
+/Copilot-Processing.md
+
+# other artifacts
+*.exe
+syn.html

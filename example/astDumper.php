@@ -3,10 +3,10 @@
 use TreeSitter as TS;
 
 class AstDumper {
-    const PREFIX_LAST    = '└─ ';
-    const PREFIX_NOTLAST = '├─ ';
-    const PREFIX_PARENT  = '│   ';
-    const PREFIX_EMPTY   = '   ';
+    const PREFIX_LAST    = '└─── ';
+    const PREFIX_NOTLAST = '├─── ';
+    const PREFIX_PARENT  = '│    ';
+    const PREFIX_EMPTY   = '     ';
 
     private TS\Node $node;
 
@@ -55,11 +55,13 @@ class AstDumper {
 #⃣  =>  23 E2 83 A3                      (hash + combining enclosing keycap)
 #️  =>  23 EF B8 8F                      (hash + variation selector-16)
         $text = match (true) {
+            strpos($node->getText(), "\n") !== false => '...',
             in_array($node->getType(), ['comment']) => '/* .. */',
             in_array($node->getType(), ['compound_statement', 'anonymous_function', 'arguments', 'method_declaration', 'assignment_expression']) => '',
             default => $node->getText(),
         };
-        $line =  sprintf("[%s] %d:%d - %s: %s", $name ?? '--', $startPoint->row, $startPoint->column, $node->getType(), $text);
+        //$line =  sprintf("[%s] %d:%d - %s: %s", $name ?? '--', $startPoint->row, $startPoint->column, $node->getType(), $text);
+        $line =  sprintf("[%d:%d] [%s] - %s: %s", $startPoint->row, $startPoint->column, $name ?? '--', $node->getType(), $text);
         return $line;
     }
 }

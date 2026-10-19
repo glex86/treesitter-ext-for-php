@@ -29,6 +29,8 @@ __pycache__/
 *.pc
 *.exp
 *.lib
+*.lo
+
 
 # Zig artifacts
 .zig-cache/
